@@ -1,0 +1,90 @@
+## For developer only
+## Please read use guide in ./docs/dev-on-docker-env-note.pdf
+## [usage]
+## Run in development env
+#     docker-compose up
+## To see config after merge please run command:
+#     docker-compose config
+version: "3.7"
+services:
+  maybe_app:
+    working_dir: /var/www/html/maybe
+    user: "$uid"
+    image: maybe-php-fpm-dev
+    ports:
+      - 5173:5173
+    build:
+      target: php-fpm-dev
+      args:
+        USER_ID: ${uid:-1000}
+        GROUP_ID: ${gid:-1000}
+    volumes:
+      - .:/var/www/html/maybe:delegated
+      - .docker/php/conf.d/z-xdebug.dev.ini:/usr/local/etc/php/conf.d/z-xdebug.dev.ini
+      - .docker/php/conf.d/z-php.dev.ini:/usr/local/etc/php/conf.d/z-php.dev.ini
+      - .docker/php/workers/scheduler_run.conf:/etc/supervisor/conf.d/scheduler_run.conf
+    extra_hosts: #uncomment this section if you use linux and want run xdebug
+      - host.docker.internal:host-gateway # support on linux host, container communicate with host over domain host.docker.internal (docker engine ver > 20.10)
+    command: 
+      supervisord -c .docker/php/workers/scheduler_run.conf
+    environment:
+      APPLICATION_ENV: development
+      # xdebug
+      #PHP_IDE_CONFIG: serverName=maybe-docker
+      # for run phpunit only, see environment var needed in tests/bootstrap.php (search with keyword 'getenv')
+      APP_SUBDOMAIN: localhost
+      TEST_DB_HOST: maybe_db
+      #TEST_DB_NAME: maybe_unittest
+
+  maybe_public:
+    working_dir: /var/www/html/maybe/public
+    image: maybe-nginx-builder
+    build:
+      target: nginx-builder
+    volumes:
+      - ./public:/var/www/html/maybe/public
+      - ./storage/app/public:/var/www/html/maybe/storage/app/public
+      - .docker/nginx/conf.d/maybe-app.conf:/etc/nginx/conf.d/default.conf
+      - .docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  maybe_db:
+    container_name: maybe_db
+    image: mysql:8.0.28
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--default-authentication-plugin=mysql_native_password",
+        "--skip-name-resolve",
+        "--sql-mode=",
+        "--group_concat_max_len=100000",
+        "--slow_query_log=1",
+        "--long_query_time=1",
+        "--slow_query_log_file=/var/log/mysql/slow.log",
+        "--log_queries_not_using_indexes=0",
+        "--general-log=1",
+        "--log-output=TABLE",
+        "--local-infile=1",
+      ]
+    restart: always
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: huypq29102001
+      MYSQL_DATABASE: maybe
+      TZ: Asia/Tokyo
+    volumes:
+      - data-mysql-maybe:/var/lib/mysql:delegated
+
+  session_storage:
+    container_name: session_storage_maybe
+    image: redis:6.2.5-alpine3.14
+    restart: always
+
+# [ volumes definition ]
+# creates Docker volumes which can be mounted by other containers too e.g. for backup
+volumes:
+  data-mysql-maybe:
+    driver: local

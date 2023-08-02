@@ -1,0 +1,43 @@
+## Base service of bizcrm application:
+## Please read use guide in ./docs/dev-on-docker-env-note.pdf
+## This app will deploy on ECS so we can't use custom network need use deprecated docker 'link' feature
+## 1. Combined this file with docker-composer.prod.yml to build and run production image
+## 2. Combined this file with docker-composer.overrides.yml to build and run dev image
+version: "3.7"
+services:
+  maybe_app:
+    image: maybe-app:${TAG:-latest}
+    container_name: maybe_app
+    init: true
+    environment:
+      APPLICATION_ENV: production
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+      target: maybe-app
+      args:
+        GIT_COMMIT_HASH: N/A
+        GIT_BRANCH_NAME: N/A
+    tty: true
+    restart: always
+  maybe_public:
+    image: maybe-public:${TAG:-latest}
+    container_name: maybe_public
+    init: true
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+      target: maybe-public
+      args:
+        GIT_COMMIT_HASH: N/A
+        GIT_BRANCH_NAME: N/A
+    ports:
+      - 8080:80
+    restart: always
+    depends_on:
+      - maybe_app
+    environment:
+        - APP_CONTAINER_LINK=maybe_app:9000
+networks:
+  default:
+    name: maybe
