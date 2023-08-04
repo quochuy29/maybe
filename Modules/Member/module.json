@@ -1,11 +1,11 @@
 {
-    "name": "User",
-    "alias": "user",
+    "name": "Member",
+    "alias": "member",
     "description": "",
     "keywords": [],
     "priority": 0,
     "providers": [
-        "Modules\\User\\Providers\\UserServiceProvider"
+        "Modules\\Member\\Providers\\MemberServiceProvider"
     ],
     "files": []
 }
