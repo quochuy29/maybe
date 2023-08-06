@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import index from '../component/index.vue';
-import ListMember from '../../../Modules/User/Resources/assets/js/component/ListMember.vue';
+import ListMember from '../../../Modules/Member/Resources/assets/js/component/ListMember.vue';
 
 const routes = [
     {

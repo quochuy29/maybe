@@ -9,16 +9,17 @@ const app = createApp(App).use(Router).use(SoftUIDashboard);
 
 function importModuleComponents() {
     var context =  import.meta.globEager('../../Modules/**/*.vue');
-    var card = import.meta.globEager('./component/Cards/*.vue');
+    var component = import.meta.globEager('./component/**/*.vue');
     for (const key of Object.keys(context)) {
         const module = context[key].default;
         const name = key.split('/').pop().split('.')[0];
         app.component(name, module);
     }
 
-    for (const key of Object.keys(card)) {
-        const module = card[key].default;
+    for (const key of Object.keys(component)) {
+        const module = component[key].default;
         const name = key.split('/').pop().split('.')[0];
+        console.log(name);
         app.component(name, module);
     }
 }

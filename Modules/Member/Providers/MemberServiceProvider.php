@@ -38,6 +38,7 @@ class MemberServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->commands([\Modules\Member\Console\BatchTestImportMember::class,]);
     }
 
     /**

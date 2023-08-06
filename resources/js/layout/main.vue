@@ -41,7 +41,7 @@
                                 <i class="cursor-pointer fa fa-cog fixed-plugin-button-nav" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="nav-item dropdown d-flex align-items-center pe-2">
+                        <!--<li class="nav-item dropdown d-flex align-items-center pe-2">
                             <a id="dropdownMenuButton" href="#" class="p-0 nav-link text-body" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="cursor-pointer fa fa-bell" aria-hidden="true"></i>
                             </a>
@@ -50,7 +50,7 @@
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="py-1 d-flex">
                                             <div class="my-auto">
-                                                <img src="/vite-soft-ui-dashboard/assets/team-2.d149865c.jpg" class="avatar avatar-sm me-3" alt="user image">
+                                                <img src="../../../public/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user image">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
                                                 <h6 class="mb-1 text-sm font-weight-normal">
@@ -67,7 +67,7 @@
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="py-1 d-flex">
                                             <div class="my-auto">
-                                                <img src="/vite-soft-ui-dashboard/assets/logo-spotify.37f3657f.svg" class="avatar avatar-sm bg-gradient-dark me-3" alt="logo spotify">
+                                                <img src="../../../public/img/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark me-3" alt="logo spotify">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
                                                 <h6 class="mb-1 text-sm font-weight-normal">
@@ -88,7 +88,7 @@
                                     </sidenav>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </div>
