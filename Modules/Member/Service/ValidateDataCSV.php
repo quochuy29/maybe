@@ -2,7 +2,7 @@
 
 namespace Modules\Member\Service;
 
-class ValidateDataCsv
+class ValidateDataCSV
 {
     private $_ruleList = [
         'member_code' => [

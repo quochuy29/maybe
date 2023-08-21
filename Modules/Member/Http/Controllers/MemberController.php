@@ -11,6 +11,7 @@ use Modules\Member\Service\ImportMember;
 use Modules\Member\Service\ValidateDataCSV;
 use Modules\Member\Service\ValidateFileCSV;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Member\Service\DataTranferMember;
 
 class MemberController extends Controller
 {
@@ -120,7 +121,7 @@ class MemberController extends Controller
         $path = Storage::path('csv/members.csv');
 
         $this->memberImport->excuteTempTable($path);
-        $dataTranfer = resolve(DataTranferMember::class)->getDataTempTable();
+        $dataTranfer = (new DataTranferMember())->getDataTempTable();
         $intIsOk = $this->validateFile->validateFormatDataCsv($validateDataCsv, $dataTranfer, $aryError);
 
         if ($intIsOk === 0) {

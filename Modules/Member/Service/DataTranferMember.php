@@ -11,7 +11,7 @@ class DataTranferMember
 
     public function getDataTempTable()
     {
-        $importTempTable = resolve(MemberService::class);
+        $importTempTable = resolve(ImportMember::class);
         return $importTempTable->getTablePdo(self::TEMP_TABLE) ?? [];
     }
 

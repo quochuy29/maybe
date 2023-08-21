@@ -4,6 +4,10 @@ namespace Modules\Member\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Member\Service\DataTranferMember;
+use Modules\Member\Service\ImportMember;
+use Modules\Member\Service\ValidateDataCSV;
+use Modules\Member\Service\ValidateFileCSV;
 
 class MemberServiceProvider extends ServiceProvider
 {
@@ -38,7 +42,23 @@ class MemberServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-        $this->commands([\Modules\Member\Console\BatchTestImportMember::class,]);
+        $this->commands([\Modules\Member\Console\BatchTestImportMember::class]);
+        
+        $this->app->bind(DataTranferMember::class, function () {
+            return new DataTranferMember();
+        });
+
+        $this->app->bind(ImportMember::class, function () {
+            return new ImportMember();
+        });
+
+        $this->app->bind(ValidateDataCSV::class, function () {
+            return new ValidateDataCSV();
+        });
+
+        $this->app->bind(ValidateFileCSV::class, function () {
+            return new ValidateFileCSV();
+        });
     }
 
     /**
