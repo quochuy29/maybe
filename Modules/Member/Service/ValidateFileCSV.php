@@ -91,7 +91,6 @@ class ValidateFileCSV
                 $data = $this->prepareData(array_values($record), $row, $fieldItem, $fileHeader);
                 $validator->setData($data);
                 $validator->validate();
-
                 if (!$validator->isValid()) {
                     $aryError = array_merge($aryError, $validator->getError());
                     $validator->emptyError();

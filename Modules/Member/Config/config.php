@@ -22,5 +22,6 @@ return [
         "member_creator_id",
         "member_updater_id",
         "member_reset_password_flg"
-    ]
+    ],
+    'path_write_file_log' => 'member/logs/'
 ];

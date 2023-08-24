@@ -133,12 +133,12 @@ class ImportMember
 
         $data = [
             'deleted_at' => null,
-            'member_updater_id' => $currentUser->id
+            'member_updater_id' => $currentUser->id ?? 1
         ];
         
         if ($isInsert) {
             $data['member_reset_password_flg'] = 0;
-            $data['member_creator_id'] = $currentUser->id;
+            $data['member_creator_id'] = $currentUser->id ?? 1;
         }
 
         return $data;
@@ -186,11 +186,12 @@ class ImportMember
     public function handleDuplicateMemberCodes($originTable, $tempTable)
     {
         $transferMember = resolve(DataTranferMember::class);
-        $duplicateMemberCodeReplaceFields = $transferMember->getDuplicateMemberCodes($originTable, $tempTable);
-        $this->removeMemberCodeOnlyDuplicateOnOriginTable($duplicateMemberCodeReplaceFields, $originTable);
+        // $duplicateMemberCodeReplaceFields = $transferMember->getDuplicateMemberCodes($originTable, $tempTable);
+        // $this->removeMemberCodeOnlyDuplicateOnOriginTable($duplicateMemberCodeReplaceFields, $originTable);
 
         $duplicateMemberCodeNotReplaceFields = $transferMember->getDuplicateMemberCodes($originTable, $tempTable, 0);
-        $duplicateMemberCodes = $this->mergeDuplicateMemberCode($duplicateMemberCodeReplaceFields, $duplicateMemberCodeNotReplaceFields);
+        $duplicateMemberCodes = $duplicateMemberCodeNotReplaceFields;
+        // $duplicateMemberCodes = $this->mergeDuplicateMemberCode($duplicateMemberCodeReplaceFields, $duplicateMemberCodeNotReplaceFields);
         if (empty($duplicateMemberCodes)) {
             return false;
         }
@@ -237,26 +238,26 @@ class ImportMember
      * trả về true hoặc false nếu true thì sẽ thêm giá trị vào mảng $duplicateMemberCodeReplaceFields
     **/
 
-    private function mergeDuplicateMemberCode($duplicateMemberCodeReplaceFields, $duplicateMemberCodeNotReplaceFields)
-    {
-        $memberCodeReplaceFields = array_column($duplicateMemberCodeReplaceFields, 'member_code');
-        foreach ($duplicateMemberCodeNotReplaceFields as $duplicateMemberCodeNotReplaceField) {
-            if (!$this->inArrayRegardlessUpperCaseLowerCase($duplicateMemberCodeNotReplaceField->member_code, $memberCodeReplaceFields)) {
-                $duplicateMemberCodeReplaceFields[] = $duplicateMemberCodeNotReplaceField;
-            }
-        }
-        return $duplicateMemberCodeReplaceFields;
-    }
+    // private function mergeDuplicateMemberCode($duplicateMemberCodeReplaceFields, $duplicateMemberCodeNotReplaceFields)
+    // {
+    //     $memberCodeReplaceFields = array_column($duplicateMemberCodeReplaceFields, 'member_code');
+    //     foreach ($duplicateMemberCodeNotReplaceFields as $duplicateMemberCodeNotReplaceField) {
+    //         if (!$this->inArrayRegardlessUpperCaseLowerCase($duplicateMemberCodeNotReplaceField->member_code, $memberCodeReplaceFields)) {
+    //             $duplicateMemberCodeReplaceFields[] = $duplicateMemberCodeNotReplaceField;
+    //         }
+    //     }
+    //     return $duplicateMemberCodeReplaceFields;
+    // }
 
     /**
      * hàm inArrayRegardlessUpperCaseLowerCase xử lý check giá trị có khớp với 1 trong số phần tử trong
      * mảng truyền vào và dựa vào việc có giá trị hay không để trả về true hoặc false 
     **/
 
-    private function inArrayRegardlessUpperCaseLowerCase($value, $array)
-    {
-        return !empty(preg_grep("/{$value}/i", $array));
-    }
+    // private function inArrayRegardlessUpperCaseLowerCase($value, $array)
+    // {
+    //     return !empty(preg_grep("/{$value}/i", $array));
+    // }
 
 }
 

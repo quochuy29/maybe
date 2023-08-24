@@ -148,4 +148,21 @@ class MemberController extends Controller
             }
         }
     }
+
+    public function writeImportLogFile($errorMsg)
+    {
+        $content = '';
+        $logs = config('member.path_write_file_log');
+        $fileName = date('Ymd', time()) . '_' . date('His', time()) . '.txt';
+        foreach ($errorMsg as $msg) {
+            $line = $msg . PHP_EOL;
+            $content .= $line;
+        }
+        if (!Storage::disk('local')->exists($logs)) {
+            Storage::disk('local')->makeDirectory($logs);
+        }
+        Storage::disk('local')->put($logs . $fileName, $content);
+
+        return $fileName;
+    }
 }

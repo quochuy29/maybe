@@ -70,6 +70,10 @@ class DataTranferMember
     {
         $set = [];
         foreach ($updatedData as $k => $v) {
+            if ($v == null) {
+                $set[] = "$k=null";
+                continue;
+            }
             $set[] = "$k='$v'";
         }
         $sql = "UPDATE $table SET " . implode(', ', $set);
@@ -82,17 +86,17 @@ class DataTranferMember
         return DB::select($query);
     }
 
-    public function createMemberCodeByMemberLoginName($table)
-    {
-        $query = 'UPDATE `' . $table . '` SET member_code = replace(replace(replace(replace(replace(replace
-        (replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace
-        (replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace
-        (replace(member_login_name, "!", ""), \'\"\', ""), "#", ""), "$", ""), "%", ""), "&", ""), "(", ""), ")", "")
-        , "-", ""), "^", ""), "\\\\", ""), "@", ""), "[", ""), "]", ""), ";", ""), ":", ""), ",", ""), ".", "")
-        , "/", ""), "=", ""), "~", ""), "|", ""), "`", ""), "{", ""), "}", ""), "+", ""), "\'", ""), "*", "")
-        , "<", ""), ">", ""), "?", ""), "_", ""), "", "")';
-        return DB::select($query);
-    }
+    // public function createMemberCodeByMemberLoginName($table)
+    // {
+    //     $query = 'UPDATE `' . $table . '` SET member_code = replace(replace(replace(replace(replace(replace
+    //     (replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace
+    //     (replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace
+    //     (replace(member_login_name, "!", ""), \'\"\', ""), "#", ""), "$", ""), "%", ""), "&", ""), "(", ""), ")", "")
+    //     , "-", ""), "^", ""), "\\\\", ""), "@", ""), "[", ""), "]", ""), ";", ""), ":", ""), ",", ""), ".", "")
+    //     , "/", ""), "=", ""), "~", ""), "|", ""), "`", ""), "{", ""), "}", ""), "+", ""), "\'", ""), "*", "")
+    //     , "<", ""), ">", ""), "?", ""), "_", ""), "", "")';
+    //     return DB::select($query);
+    // }
 
     public function setIsInsertRowTempTable($originTable, $tempTable)
     {
@@ -116,7 +120,6 @@ class DataTranferMember
                             member_birth_date,
                             member_phone_number,
                             member_creator_id,
-                            deleted_at,
                             member_reset_password_flg";
 
         $tempCopyFields = "temp.member_name,
@@ -126,7 +129,6 @@ class DataTranferMember
                             temp.member_birth_date,
                             temp.member_phone_number,
                             temp.member_creator_id,
-                            temp.deleted_at,
                             temp.member_reset_password_flg";
 
         $sql = "INSERT INTO  `{$originTable}` ({$insertOriginFields})
@@ -164,8 +166,7 @@ class DataTranferMember
         if ($memberCode !== '') {
             $query .= ' WHERE union_member_code.member_code = ' . "'{$memberCode}'";
         }
-        $query .= ' GROUP BY union_member_code.member_code
-        HAVING count_all > 1 ';
+        $query .= ' GROUP BY union_member_code.member_code HAVING count_all > 1 ';
 
         return DB::select($query);
     }
@@ -180,7 +181,7 @@ class DataTranferMember
         // , "-", ""), "^", ""), "\\\\", ""), "@", ""), "[", ""), "]", ""), ";", ""), ":", ""), ",", ""), ".", "")
         // , "/", ""), "=", ""), "~", ""), "|", ""), "`", ""), "{", ""), "}", ""), "+", ""), "\'", ""), "*", "")
         // , "<", ""), ">", ""), "?", ""), "_", ""), "", "") = "' . $memberCode . '"';
-        $query = 'SELECT COUNT(member_code) as count_origin FROM ' . $originTable . ' WHERE member_is_deleted = 0 AND member_code = "' . $memberCode . '"';
+        $query = 'SELECT COUNT(member_code) as count_origin FROM ' . $originTable . ' WHERE deleted_at IS NULL AND member_code = "' . $memberCode . '"';
         $result = DB::select($query);
         return $result[0]->count_origin ?? 0;
     }

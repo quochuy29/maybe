@@ -20,17 +20,17 @@ class ValidateDataCSV
 
     ];
     private $_rules = [
-        'Require' => '%s行目%s列目の%sを入力してください。',
-        'RequireIF' => '%s行目%s列目の%sを入力してください。',
-        'FormatCode' => '%s行目%s列目の%sに使用できる文字は半角英字（大文字・小文字）、半角数字、半角記号（!#$%%\'()-^\@[;],./\=~|`{+*}?_）になります。',
-        'FormatMail' => '%s行目%s列目のメインメールアドレスの形式が不正です。例：gnext@gnext.co.jp',
-        'FormatPhone' => '%s行目%s列目の%sは半角数字と(-)、(*)、(+)を使用してください。',
-        'MaxLength' => '%s行目%s列目の%sは%s文字以内で入力してください。',
-        'PasswordEmpty' => '%s行目%s列目のパスワードを入力してください。',
-        'PasswordLength' => '%s行目%s列目のパスワードの長さが不正です。',
-        'FormatPassword' => '%s行目%s列目のパスワードの複雑さが不正です。',
-        'DuplicateMemberCode' => '%s行目%s列目のユーザーIDが重複しています。',
-        'DuplicateMail' => '%s行目%s列目のメインメールアドレスが重複しています。',
+        'Require' => 'Vui lòng nhập %s vào cột %s dòng %s.',
+        'RequireIF' => 'Vui lòng nhập %s vào cột %s dòng %s.',
+        'FormatCode' => 'Các ký tự có thể được sử dụng cho %s trong cột %s dòng %s là bảng chữ cái nửa chiều rộng (chữ hoa và chữ thường), số nửa chiều rộng và ký hiệu nửa chiều rộng（!#$%%\'()-^\@[;],./\=~|`{+*}?_）',
+        'FormatMail' => 'Định dạng của địa chỉ email chính tại dòng %s, cột %s không hợp lệ. Ví dụ ：phanquochuyqthm@gmail.com.',
+        'FormatPhone' => 'Sử dụng số một byte và (-), (*) và (+) cho %s trong hàng %s cột %s.',
+        'MaxLength' => 'Vui lòng nhập %s vào dòng %s cột %s trong %s ký tự.',
+        'PasswordEmpty' => 'Vui lòng nhập mật khẩu tại dòng %s, cột %s.',
+        'PasswordLength' => 'Độ dài của mật khẩu tại dòng %s, cột %s không hợp lệ.',
+        'FormatPassword' => 'Độ phức tạp của mật khẩu ở dòng %s, cột %s không hợp lệ.',
+        'DuplicateMemberCode' => 'ID người dùng bị trùng lặp tại %s dòng %s cột.',
+        'DuplicateMail' => 'Địa chỉ email chính tại dòng %s cột %s bị trùng lặp.',
     ];
 
     private $_pattern = [
@@ -194,9 +194,9 @@ class ValidateDataCSV
     {
         if ($data[$field]['value'] == '') {
             $errorPosition[] = [
-                $data[$field]['row'],
+                $data[$field]['header'],
                 $data[$field]['col'],
-                $data[$field]['header']
+                $data[$field]['row']
             ];
         }
 
@@ -349,7 +349,7 @@ class ValidateDataCSV
         if (str_contains($data[$field]['value'], ' ')) {
             return true;
         }
-        $code = mb_strtolower($data['member_login_name']['value']);
+        $code = mb_strtolower($data['member_code']['value']);
 
         if (in_array($code, $this->_userList)) {
             return true;
@@ -389,7 +389,7 @@ class ValidateDataCSV
     public function checkDuplicateMail($data, &$errorPosition, $field)
     {
         $mail = $data[$field]['value'];
-        $loginName = $data['member_login_name']['value'] ?? '';
+        $loginName = $data['member_code']['value'] ?? '';
 
         if (!array_search($mail, $this->_duplicateMail)) {
             $this->_duplicateMail[$loginName] = $mail;
