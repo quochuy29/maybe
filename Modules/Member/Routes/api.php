@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('member/upload-file', 'MemberController@uploadFile');
+Route::post('member/import', 'MemberController@importMember');

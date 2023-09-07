@@ -1,5 +1,5 @@
 <template>
-    <ListMember></ListMember>
+    <Member></Member>
 </template>
 
 <script>

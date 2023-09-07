@@ -3,9 +3,9 @@ import {createApp} from 'vue';
 import Router from './router/router';
 import App from './App.vue';
 import SoftUIDashboard from "./asset/soft-ui-dashboard";
-import Card from './component/Cards/Card.vue';
+import BootstrapVue3 from 'bootstrap-vue-3';
 
-const app = createApp(App).use(Router).use(SoftUIDashboard);
+const app = createApp(App).use(Router).use(SoftUIDashboard).use(BootstrapVue3);
 
 function importModuleComponents() {
     var context =  import.meta.globEager('../../Modules/**/*.vue');
@@ -19,7 +19,6 @@ function importModuleComponents() {
     for (const key of Object.keys(component)) {
         const module = component[key].default;
         const name = key.split('/').pop().split('.')[0];
-        console.log(name);
         app.component(name, module);
     }
 }
