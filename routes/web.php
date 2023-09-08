@@ -26,5 +26,5 @@ Route::middleware([
     Route::post('store-subdomain', [SubDomainController::class, 'storeSubdomain'])->name('store-subdomain');
     Route::get('/{any}', function () {
         return view('welcome');
-    })->where('any', '^(?!create-subdomain|store-subdomain).*$');
+    })->where('any', '^(?!create-subdomain|store-subdomain|api).*$');
 });

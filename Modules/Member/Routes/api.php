@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Member\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('member', 'MemberController@getMember');
 Route::post('member/upload-file', 'MemberController@uploadFile');
 Route::post('member/import', 'MemberController@importMember');

@@ -1,7 +1,7 @@
 <template>
         <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" @click="resetFileUpload" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Launch static backdrop modal
+    Import Member
     </button>
 
     <!-- Modal -->
@@ -45,7 +45,8 @@
         name: "UploadImportFileMember",
         data(){
             return {
-                file_name: ''
+                file_name: '',
+                checkDelete: false
             }
         },
         methods: {
@@ -64,7 +65,7 @@
                     const response = await axios.post(`api/member/upload-file`, formData);
                     if (response !== undefined && response.status === 200) {
                         this.uploadFlag = false;
-                        // this.importFile();
+                        this.importFile();
                     }
                 } catch (error) {
                     this.uploadFlag = false;
@@ -76,7 +77,7 @@
 
             async importFile() {
                 try {
-                    const response = await axios.post(`member/import`);
+                    const response = await axios.post(`api/member/import`);
                     // this.showToast(response.data.message);
                 } catch(error) {
                     const url = error.response.data.url_error;

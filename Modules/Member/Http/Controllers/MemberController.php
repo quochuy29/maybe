@@ -2,6 +2,7 @@
 
 namespace Modules\Member\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -89,6 +90,35 @@ class MemberController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getMember(Request $request)
+    {
+        $query = "cat";
+        $apiKey = 'AIzaSyCGMzUQgALJPs0OFm223TPY1AHXK8wCwB0';
+        $searchEngineId = 'e206e7879ec5a423b';
+
+        $client = new Client();
+        $response = $client->get('https://www.googleapis.com/customsearch/v1', [
+            'query' => [
+                'key' => $apiKey,
+                'cx' => $searchEngineId,
+                'q' => $query,
+                'searchType' => 'image',
+                'start' => 2
+            ],
+        ]);
+
+        $results = json_decode($response->getBody()->getContents());
+        dd($results);
+        $query = Member::select('member_id', 'member_name', 'member_email', 'member_phone_number')
+        ->orderBy($request->sortField ?? 'member_name', $request->sortType ?? 'asc');
+        
+        if ((string)$request->searchField !== '') {
+            $query = $query->where('member_name', 'like', "%{$request->searchField}%");
+        }
+
+        return $query->paginate('10', ['*'], 'page', $request->page ?? 1);
     }
 
     public function uploadFile(Request $request)
