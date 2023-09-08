@@ -95,8 +95,8 @@ class MemberController extends Controller
     public function getMember(Request $request)
     {
         $query = "cat";
-        $apiKey = 'AIzaSyCGMzUQgALJPs0OFm223TPY1AHXK8wCwB0';
-        $searchEngineId = 'e206e7879ec5a423b';
+        $apiKey = '';
+        $searchEngineId = '';
 
         $client = new Client();
         $response = $client->get('https://www.googleapis.com/customsearch/v1', [
