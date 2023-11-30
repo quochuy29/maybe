@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('member', 'MemberController@getMember');
 Route::post('member/upload-file', 'MemberController@uploadFile');
 Route::post('member/import', 'MemberController@importMember');
+Route::get('google-search-api', 'MemberController@getResultSearchApi');

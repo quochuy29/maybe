@@ -52,6 +52,14 @@
         @sort-data="sortData"
         @goto-page="gotoPage">
     </ListMember>
+
+    <div id="container" class="cols" v-if="this.data != null">
+        <div v-for="(item, index) in this.data.items" :key="index">
+            <a class="box-img" :href="item.link">
+                <img :src="item.link" title="..." loading="lazy">
+            </a>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -96,13 +104,26 @@ export default {
             },
             searchFieldName: '',
             loadingChild: false,
-            pagination: {}
+            pagination: {},
+            paramSearch: {
+                search: 'cat'
+            },
+            data: null,
         }
     },
     mounted() {
         this.getMember();
+        this.searchApi();
     },
     methods: {
+        async searchApi() {
+            try {
+                const data = await axios.get('api/google-search-api', {params: this.paramSearch});
+                this.data = data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async getMember() {
             try {
                 const member = await axios.get('api/member', {params: this.params});
@@ -142,3 +163,28 @@ export default {
     }
 }
 </script>
+<style lang="css" scoped>
+#container {
+    width: 100%;
+    max-width: 700px;
+    margin: 2em auto;
+    margin: 0 auto;
+    width: 990px;
+}
+
+.cols {
+    -moz-column-count:3;
+    -moz-column-gap: 3%;
+    -moz-column-width: 30%;
+    -webkit-column-count:3;
+    -webkit-column-gap: 3%;
+    -webkit-column-width: 30%;
+    column-count: 3;
+    column-gap: 3%;
+    column-width: 30%;
+}
+
+.box-img img {
+  max-width: 100%;
+}
+</style>

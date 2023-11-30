@@ -94,23 +94,6 @@ class MemberController extends Controller
 
     public function getMember(Request $request)
     {
-        $query = "cat";
-        $apiKey = '';
-        $searchEngineId = '';
-
-        $client = new Client();
-        $response = $client->get('https://www.googleapis.com/customsearch/v1', [
-            'query' => [
-                'key' => $apiKey,
-                'cx' => $searchEngineId,
-                'q' => $query,
-                'searchType' => 'image',
-                'start' => 2
-            ],
-        ]);
-
-        $results = json_decode($response->getBody()->getContents());
-        dd($results);
         $query = Member::select('member_id', 'member_name', 'member_email', 'member_phone_number')
         ->orderBy($request->sortField ?? 'member_name', $request->sortType ?? 'asc');
         
@@ -194,5 +177,24 @@ class MemberController extends Controller
         Storage::disk('local')->put($logs . $fileName, $content);
 
         return $fileName;
+    }
+
+    public function getResultSearchApi(Request $request)
+    {
+        $query = "cat";
+
+        $client = new Client();
+        $response = $client->get('https://www.googleapis.com/customsearch/v1', [
+            'query' => [
+                'key' => env('GOOGLE_SEARCH_API_KEY'),
+                'cx' => env('GOOGLE_SEARCH_API_ID'),
+                'q' => $query,
+                'searchType' => 'image',
+                'start' => 2
+            ],
+        ]);
+
+        $results = json_decode($response->getBody()->getContents());
+        return $results;
     }
 }
